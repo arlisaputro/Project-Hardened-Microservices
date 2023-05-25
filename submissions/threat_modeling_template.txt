@@ -34,7 +34,33 @@ e. Denial of Service: Attackers may target Kubernetes components or resources to
 ========================================
 Docker-bench Run Results and Analysis
 From the failed findings, select and document 3 findings from the Docker-bench results that you want to harden based on the 5 attack surface areas you identified in Step 1. At least 1 of the 3 hardened findings should be different from the ones mentioned in the exercise (i.e. 5.10, 5.14, and 5.22).
+based on doc CIS_Docker_Benchmark_v1.2.0
+
+[Fail] 1.2.1 Ensure a separate partition for containers has been created (Scored)
+
+Description:
+All Docker containers and their data and metadata is stored under /var/lib/docker directory. By default, /var/lib/docker should be mounted under either the / or /var partitions dependent on how the Linux operating system in use is configured.
+
+Remediation:
+For new installations, you should create a separate partition for the /var/lib/docker mount point. For systems which have already been installed, you should use the Logical Volume Manager (LVM) within Linux to create a new partition.
 
 
+[Fail] 3.7 Ensure that registry certificate file ownership is set to root:root (Scored)
+
+Description:
+You should verify that all the registry certificate files (usually found under /etc/docker/certs.d/<registry-name> directory) are individually owned and group owned by root.
+
+Remediation:
+The following command could be executed: chown root:root /etc/docker/certs.d/<registry-name>/*
+This would set the individual ownership and group ownership for the registry certificate files to root.
 
 
+[Fail] 4.1 Ensure that a user for the container has been created (Scored)
+
+Description:
+Containers should run as a non-root user.
+
+Remediation:
+You should ensure that the Dockerfile for each container image contains the information below: USER <username or ID>
+In this case, the user name or ID refers to the user that was found in the container base image. If there is no specific user created in the container base image, then make use of the useradd command to add a specific user before the USER instruction in the Dockerfile. For example, add the below lines in the Dockerfile to create a user in the container: RUN useradd -d /home/username -m -s /bin/bash username USER username
+Note: If there are users in the image that are not needed, you should consider deleting them. After deleting those users, commit the image and then generate new instances of the containers. Alternatively, if it is not possible to set the USER directive in the Dockerfile, a script running as part of the CMD or ENTRYPOINT sections of the Dockerfile should be used to ensure that the container process switches to a non-root user.
