@@ -45,22 +45,31 @@ Remediation:
 For new installations, you should create a separate partition for the /var/lib/docker mount point. For systems which have already been installed, you should use the Logical Volume Manager (LVM) within Linux to create a new partition.
 
 
-[Fail] 3.7 Ensure that registry certificate file ownership is set to root:root (Scored)
+
+[FAIL] 4.5 Ensure Content trust for Docker is Enabled (Automated)
 
 Description:
-You should verify that all the registry certificate files (usually found under /etc/docker/certs.d/<registry-name> directory) are individually owned and group owned by root.
-
+Content trust is disabled by default and should be enabled in line with organizational security policy.
+Audit:
+You should execute the following command: echo $DOCKER_CONTENT_TRUST
+This should return a value of 1.
 Remediation:
-The following command could be executed: chown root:root /etc/docker/certs.d/<registry-name>/*
-This would set the individual ownership and group ownership for the registry certificate files to root.
+To enable content trust in a bash shell, you should enter the following command: export DOCKER_CONTENT_TRUST=1
+Alternatively, you could set this environment variable in your profile file so that content trust in enabled on every login.
 
-
-[Fail] 4.1 Ensure that a user for the container has been created (Scored)
+[Fail] 2.13 Ensure live restore is enabled (Scored)
 
 Description:
-Containers should run as a non-root user.
+The --live-restore option enables full support of daemon-less containers within Docker. It ensures that Docker does not stop containers on shutdown or restore and that it properly reconnects to the container when restarted.
 
+Audit:
+You should run docker info and ensure that the Live Restore Enabled property is set to true. docker info --format '{{ .LiveRestoreEnabled }}'
+Alternatively, you could run the below command and ensure that --live-restore is in use. ps -ef | grep dockerd
+The contents of /etc/docker/daemon.json should also be reviewed to ensure this setting is in place.
 Remediation:
-You should ensure that the Dockerfile for each container image contains the information below: USER <username or ID>
-In this case, the user name or ID refers to the user that was found in the container base image. If there is no specific user created in the container base image, then make use of the useradd command to add a specific user before the USER instruction in the Dockerfile. For example, add the below lines in the Dockerfile to create a user in the container: RUN useradd -d /home/username -m -s /bin/bash username USER username
-Note: If there are users in the image that are not needed, you should consider deleting them. After deleting those users, commit the image and then generate new instances of the containers. Alternatively, if it is not possible to set the USER directive in the Dockerfile, a script running as part of the CMD or ENTRYPOINT sections of the Dockerfile should be used to ensure that the container process switches to a non-root user.
+Run Docker in daemon mode and pass --live-restore to it as an argument. For Example, dockerd --live-restore
+
+
+
+
+
