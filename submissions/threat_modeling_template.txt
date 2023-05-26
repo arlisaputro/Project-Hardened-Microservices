@@ -36,14 +36,13 @@ Docker-bench Run Results and Analysis
 From the failed findings, select and document 3 findings from the Docker-bench results that you want to harden based on the 5 attack surface areas you identified in Step 1. At least 1 of the 3 hardened findings should be different from the ones mentioned in the exercise (i.e. 5.10, 5.14, and 5.22).
 based on doc CIS_Docker_Benchmark_v1.2.0
 
-[Fail] 1.2.1 Ensure a separate partition for containers has been created (Scored)
+[FAIL] 2.2 Ensure the logging level is set to 'info' (Scored)
 
 Description:
-All Docker containers and their data and metadata is stored under /var/lib/docker directory. By default, /var/lib/docker should be mounted under either the / or /var partitions dependent on how the Linux operating system in use is configured.
+Set Docker daemon log level to info.
 
 Remediation:
-For new installations, you should create a separate partition for the /var/lib/docker mount point. For systems which have already been installed, you should use the Logical Volume Manager (LVM) within Linux to create a new partition.
-
+Ensure that the Docker daemon configuration file has the following configuration included "log-level": "info"
 
 
 [FAIL] 4.5 Ensure Content trust for Docker is Enabled (Automated)
