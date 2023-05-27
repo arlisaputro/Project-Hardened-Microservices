@@ -1,12 +1,34 @@
-How will you test the changes?
-A sandbox environmet will be used to test changes to the cluster. This will protect production systems from being interrupted or corrupted.
-This is good practice that we can implement as part of our deployment strategy and Software Development Lifecycle.
+FOR THIS 
+1.1.12 Ensure that etcd data directory ownership is set to etcd:etcd (scored)
+Description:
+Ensure that the etcd data directory ownership is set to etcd:etcd.
 
+===================================
+How will you test the changes?
+To test the changes, you can follow these steps:
+1. Test the ownership change: Use the chown command to change the ownership of the etcd data directory to etcd:etcd. For example:
+
+sudo chown -R etcd:etcd /var/lib/etcd
+
+2. Restart etcd service: Restart the etcd service to apply the ownership changes. Use the appropriate command for your operating system.
+
+sudo systemctl restart etcd
+
+
+===================================
 How will you ensure the changes don't negatively affect your cluster?
-Using our sandbox environmet we will tests changes so we can monitor and observe the impact of those changes.
-Once changes are deployed to the sandbox environmet, we can monitor metrics using Prometheus and Grafana.
-Also, we can collect logs and traces to determine the root cause of problems and troubleshoot more eficiently.
-Historical observability in the form of a changelog will be used to construct a continuous changelog that allows us not only
-to understand historical events, but also to trace how historical changes impact the current state of our cluster.
-Our overall focus will be on the state of our cluster as a whole, and not in individual components in isolation to gain a full
-overview of our cluster.
+To ensure that the changes to the etcd data directory ownership don't negatively affect your cluster, you can follow these best practices:
+
+1. Take backups: Before making any changes, take backups of the etcd data directory. This ensures that you have a copy of the data in case any issues arise during or after the ownership changes.
+
+2. Test in a non-production environment: If possible, test the ownership changes in a non-production environment that closely resembles your production cluster. This allows you to validate the changes and identify any potential issues without impacting critical workloads.
+
+3. Monitor cluster health: Keep a close eye on the health and performance of your Kubernetes cluster after making the ownership changes. Monitor the cluster's metrics, such as resource utilization, latency, and error rates, to identify any abnormalities.
+
+4. Monitor etcd logs: Regularly check the etcd logs for any error messages or warnings related to file permissions or ownership. Monitor for any unexpected behavior or issues that may arise, such as failed leader elections or cluster instability.
+
+5. Test critical workloads: Validate the behavior of critical workloads running on the cluster. Ensure that they continue to function as expected without any errors or disruptions. Perform thorough testing of different application components that rely on etcd for data storage and retrieval.
+
+6. Rollback plan: Have a rollback plan in place to revert the ownership changes if necessary. This includes restoring the original ownership settings and restoring the etcd data directory from backups.
+
+By following these practices, you can proactively monitor and validate the changes, minimizing the risk of negative impact on your Kubernetes cluster. If any issues are detected, you can quickly address them using the backup and rollback mechanisms to ensure the stability and reliability of your cluster.
