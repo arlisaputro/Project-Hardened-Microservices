@@ -1,22 +1,22 @@
 1. Incident commander name:
-    Suspiciuous CPU activity results in a cryptomining attack
+    Suspicious CPU activity was detected, leading to the discovery of a cryptomining attack.
 
 2. Executive Summary of what happened:
-    Three pods running different crypto miners were identified running moneropool, minergate and cryptonight containers.
-    An attacker was able to get control of the cluster and use compute resources to abuse for crypto-mining.
-    The Falco monitoring runtime reports the incident and the administrator was able to visualize the suspicious activity in Grafana.
+   An incident occurred where suspicious CPU activity was detected, indicating a cryptomining attack. The investigation revealed the presence of three pods running different crypto miners, specifically moneropool, minergate, and cryptonight containers. It was determined that an attacker had gained control of the cluster and exploited its compute resources for crypto-mining purposes. The incident was reported by the Falco monitoring runtime, and the administrator was able to visualize the anomalous activity using Grafana.
 
 3. Summary of what was affected:
-    CPU resources had a significant spike indicating that attackers made use of compute resources.
+   The incident primarily affected the CPU resources, which experienced a significant spike due to the unauthorized use of compute resources by the attacker.
 
 4. Summary of the impact:
-    Monitoring reports CPU utilization spikes.
+   The impact of the incident was observed through monitoring reports showing substantial CPU utilization spikes.
 
 5. Summary of the remediation steps:
-    - Kill pods kubectl --kubeconfig kube_config_cluster.yml delete pod <pod_name> --grace-period=0 --force
-    - Verify CPU activity stabilization
+   The following steps were taken to remediate the incident:
+   - Pods involved in the attack were terminated using the command `kubectl --kubeconfig kube_config_cluster.yml delete pod <pod_name> --grace-period=0 --force`.
+   - The stability of CPU activity was verified to ensure it returned to normal levels.
 
 6. Summary of lessons learned:
-    - We should review access to the Kubernetes API server from administrative terminals and the Grafana dashboards.
-    - Admission controllers can also be configured to disallow unknown images to be used to create containers.
-    - We can update the priority of Falco rules for the metrics endpoint to the highest level.
+   The incident highlighted the following key lessons:
+   - It is essential to review and strengthen access controls for the Kubernetes API server from administrative terminals and Grafana dashboards.
+   - Configuring admission controllers to disallow the use of unknown images for creating containers can enhance security.
+   - Prioritizing Falco rules for the metrics endpoint at the highest level can improve the detection and response to such incidents in the future.
